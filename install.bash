@@ -184,3 +184,9 @@ then
     # 
     sudo rm discord.deb
 fi
+
+# Install OpenVPN
+if ! command -v openvpn &> /dev/null;
+then
+    sudo apt-get install openvpn
+fi
