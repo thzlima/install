@@ -78,9 +78,7 @@ then
     # 
     sudo apt-get install php7.4-{cli,soap,xml,mbstring,curl} -y
     # 
-    sudo apt-get update
-    # 
-    sudo apt-get install php8.1-{cli,soap,xml,mbstring,curl} -y
+    # sudo apt-get install php8.1-{cli,soap,xml,mbstring,curl} -y
     # 
     # sudo update-alternatives --config php
 fi
