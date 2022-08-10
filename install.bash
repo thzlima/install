@@ -139,7 +139,7 @@ then
     sudo rm insomnia.deb
 fi
 
- Install Dbeaver
+# Install Dbeaver
 if ! command -v dbeaver-ce &> /dev/null;
 then
     #
