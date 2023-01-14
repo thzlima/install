@@ -13,7 +13,7 @@ then
     echo -n "Qual seu nome? "
     read -r name
     # 
-    echo -n "Qual o seu e-mail? "
+    echo -n "Qual o seu e-mail da Ti.Saúde? "
     read -r email
     #
     sudo apt-get install git -y
@@ -22,9 +22,7 @@ then
     # 
     git config --global user.email $email
     # 
-    git config --global credential.helper store
-    # 
-    echo "Olá $name, seu git já está configurado no e-mail $email"
+    git config --global credential.helper software
 fi
 
 # Install Node
@@ -40,32 +38,24 @@ fi
 if ! command -v yarn &> /dev/null;
 then
     #
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-    #
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-    #
-    sudo apt-get update
-    #
-    sudo apt-get install yarn -y
+    curl -o- -L https://yarnpkg.com/install.sh | bash
 fi
 
 # Install Docker
 if ! command -v docker &> /dev/null;
 then
     #
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    curl -fsSL https://get.docker.com -o get-docker.sh
     #
-    echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-    focal stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo sh get-docker.sh
     #
-    sudo apt-get update
-    #
-    sudo apt-get install docker-ce docker-compose -y
+    sudo apt-get install docker-compose -y
     #
     sudo usermod -aG docker ${USER}
     #
     sudo chmod 666 /var/run/docker.sock
+    #
+    rm get-docker.sh
 fi
 
 # Install PHP
@@ -78,10 +68,6 @@ then
     # 
     sudo apt-get install php7.4-{cli,soap,xml,mbstring,curl} -y
     # 
-    sudo apt-get install php8.1-{cli,soap,xml,mbstring,curl} -y
-    # 
-    sudo apt-get install php8.2-{cli,soap,xml,mbstring,curl} -y
-    #
     # sudo update-alternatives --config php
 fi
 
@@ -100,8 +86,6 @@ then
     sudo mv composer.phar /usr/local/bin/composer
 fi
 
-sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y
-
 # Install VsCode
 if ! command -v code &> /dev/null;
 then
@@ -113,8 +97,6 @@ then
     sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
     #
     rm -f packages.microsoft.gpg
-    #
-    sudo apt-get update
     #
     sudo apt-get install code -y
 fi
@@ -154,8 +136,6 @@ then
     #
     sudo add-apt-repository ppa:gnome-terminator/nightly-gtk3
     #
-    sudo apt-get update
-    #
     sudo apt-get install terminator
 fi
 
@@ -185,26 +165,29 @@ then
     sudo rm discord.deb
 fi
 
-# Install OpenVPN
+# OpenSSH
+if ! command -v ssh &> /dev/null;
+then
+    # 
+    sudo apt-get install openssh-server -y
+    # 
+    sudo systemctl enable ssh
+    # 
+    sudo systemctl start ssh
+    # 
+    sudo systemctl status ssh
+fi
+
+# OpenVPN
 if ! command -v openvpn &> /dev/null;
 then
-    sudo apt-get install openvpn
+    # 
+    sudo apt-get install openvpn -y
 fi
 
-# Install Sublime Text
-if ! command -v subl &> /dev/null;
+# Workbench
+if ! command -v mysql-workbench-community &> /dev/null;
 then
-    #
-    wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/sublimehq-archive.gpg > /dev/null
-    #
-    echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-    #
-    sudo apt-get update
-    #
-    sudo apt-get install sublime-text
+    # 
+    snap install mysql-workbench-community
 fi
-
-# Install OBS Studio
-sudo add-apt-repository ppa:obsproject/obs-studio
-
-sudo apt install obs-studio
