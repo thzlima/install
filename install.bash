@@ -13,7 +13,7 @@ then
     echo -n "Qual seu nome? "
     read -r name
     # 
-    echo -n "Qual o seu e-mail da Ti.Saúde? "
+    echo -n "Qual o seu e-mail? "
     read -r email
     #
     sudo apt-get install git -y
@@ -22,14 +22,15 @@ then
     # 
     git config --global user.email $email
     # 
-    git config --global credential.helper software
+    git config --global credential.helper store
 fi
 
 # Install Node
 if ! command -v node &> /dev/null;
 then
     # 
-    curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+    # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+    curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
     # 
     sudo apt-get install nodejs -y
 fi
@@ -54,8 +55,6 @@ then
     sudo usermod -aG docker ${USER}
     #
     sudo chmod 666 /var/run/docker.sock
-    #
-    rm get-docker.sh
 fi
 
 # Install PHP
@@ -66,7 +65,7 @@ then
     # 
     sudo apt-get update
     # 
-    sudo apt-get install php7.4-{cli,soap,xml,mbstring,curl} -y
+    sudo apt-get install php8.2-{cli,soap,xml,mbstring,curl} -y
     # 
     # sudo update-alternatives --config php
 fi
@@ -75,15 +74,7 @@ fi
 if ! command -v composer &> /dev/null;
 then
     # 
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    # 
-    php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-    # 
-    php composer-setup.php
-    # 
-    php -r "unlink('composer-setup.php');"
-    # 
-    sudo mv composer.phar /usr/local/bin/composer
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 fi
 
 # Install VsCode
@@ -94,7 +85,7 @@ then
     #
     sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
     #
-    sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+    sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
     #
     rm -f packages.microsoft.gpg
     #
@@ -191,3 +182,6 @@ then
     # 
     snap install mysql-workbench-community
 fi
+
+# Finished Install Packages
+sudo apt-get autoremove -y
