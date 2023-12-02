@@ -29,10 +29,11 @@ fi
 if ! command -v node &> /dev/null;
 then
     # 
-    # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-    curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
     # 
-    sudo apt-get install nodejs -y
+    nvm install 20
+    #
+    nvm use 20
 fi
 
 # Install Yarn
@@ -65,7 +66,7 @@ then
     # 
     sudo apt-get update
     # 
-    sudo apt-get install php8.2-{cli,soap,xml,mbstring,curl} -y
+    sudo apt-get install php8.3-{cli,soap,xml,mbstring,curl} -y
     # 
     # sudo update-alternatives --config php
 fi
@@ -75,21 +76,6 @@ if ! command -v composer &> /dev/null;
 then
     # 
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-fi
-
-# Install VsCode
-if ! command -v code &> /dev/null;
-then
-    #
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-    #
-    sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
-    #
-    sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-    #
-    rm -f packages.microsoft.gpg
-    #
-    sudo apt-get install code -y
 fi
 
 # Install Python
